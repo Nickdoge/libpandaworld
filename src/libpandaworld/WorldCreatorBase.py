@@ -157,7 +157,7 @@ class WorldCreatorBase(DirectObject):
         directory = config.GetString('world-data-dir', 'worldData')
 
         try:
-            obj = __import__(directory + '.' + moduleName)
+            obj = import_module(directory + '.' + moduleName)
         except Exception as e:
             self.notify.error('Got a %s when loading %s' % (e, moduleName))
 
@@ -171,7 +171,7 @@ class WorldCreatorBase(DirectObject):
             if obj:
                 newObj = getattr(obj, symbol, None)
 
-        if newObj:
+        if newObj is not None:
             return newObj
 
     def getObjectDataByUid(self, uid, fileDict=None):
