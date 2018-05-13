@@ -125,7 +125,9 @@ class WorldCreator(WorldCreatorBase):
         newObj = None
         newActualParent = None
 
-        self.hubManager.handleObject(obj, objKey, objType) # Should there be something more here?
+        # Should there be something more here?
+
+        self.hubManager.handleObject(obj, objType, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None)
 
         return (newObj, newActualParent)
 
