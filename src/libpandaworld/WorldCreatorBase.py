@@ -161,7 +161,18 @@ class WorldCreatorBase(DirectObject):
         except Exception as e:
             self.notify.error('Got a %s when loading %s' % (e, moduleName))
 
-        return obj
+        dirl = directory.split('.')
+        dirl.append(moduleName)
+        dirl.append('objectStruct')
+
+        newObj = None
+
+        for symbol in dirl:
+            if obj:
+                newObj = getattr(obj, symbol, None)
+
+        if newObj:
+            return newObj
 
     def getObjectDataByUid(self, uid, fileDict=None):
         """
@@ -272,7 +283,6 @@ class WorldCreatorBase(DirectObject):
 
                 objData = fileData['Objects'].values()[0]['Objects']
                 if str(curUid) in objData:
-                    if curUid == objUid:
                     if objData[str(curUid)].get('Type') == 'Location':
                         return str(curUid)
                 curFile = fileData
@@ -283,7 +293,7 @@ class WorldCreatorBase(DirectObject):
             else:
                 curUid = curFile.get('Objects', {}).keys()[0]
                 if curFile['Objects'][str(curUid)].get('Type') == 'Location':
-                    return curUid)
+                    return curUid
 
         return
 
