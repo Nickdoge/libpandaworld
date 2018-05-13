@@ -13,10 +13,7 @@ class WorldCreator(WorldCreatorBase):
 
     def __init__(self, cr, worldFile, hubManager, district):
         self.objectList = {}
-        self.cr = cr
-        self.hubManager = hubManager
-        self.district = district
-        WorldCreatorBase.__init__(self, cr, worldFile)
+        WorldCreatorBase.__init__(self, cr, worldFile, hubManager, district)
         self.hubAreas = {}
 
     def destroy(self):
@@ -80,7 +77,7 @@ class WorldCreator(WorldCreatorBase):
                         addObjDict = self.fileDicts[currFile + '.py']['Objects'][altParentUid]['Objects']
                         self.loadObjectDict(addObjDict, parent, parentUid, dynamic, zoneLevel=zoneLevel, startTime=startTime)
                         try:
-                            self.cr.yieldThread('load object')
+                            self.repository.yieldThread('load object')
                         except Exception:
                             pass
 
@@ -128,7 +125,8 @@ class WorldCreator(WorldCreatorBase):
         newObj = None
         newActualParent = None
 
-        self.hubManager.handleObject(obj)
+        if actualParentObj:
+            actualParentObj.createObject(obj, objKey, objType)
 
         return (newObj, newActualParent)
 
@@ -152,8 +150,8 @@ class WorldCreator(WorldCreatorBase):
         if objDict:
             if newObj == None:
                 callback = lambda param0=0, param1=objDict, param2=objKey, param3=dynamic, param4=-1: self.loadObjectDictDelayed(param0, param1, param2, param3, param4)
-                if hasattr(self.cr, 'uidMgr'):
-                    self.cr.uidMgr.addUidCallback(objKey, callback)
+                if hasattr(self.repository, 'uidMgr'):
+                    self.repository.uidMgr.addUidCallback(objKey, callback)
             else:
                 parentObj = newObj
                 newParentUid = objKey

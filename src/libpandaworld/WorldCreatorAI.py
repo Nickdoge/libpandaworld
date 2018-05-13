@@ -8,13 +8,6 @@ class WorldCreatorAI(WorldCreatorBase):
 
     notify = directNotify.newCategory('WorldCreatorAI')
 
-    def __init__(self, air, hubManager, regionFile):
-        WorldCreatorBase.__init__(self, air, regionFile)
-
-        self.hubManager = hubManager
-
-        self.makeRegion(regionFile)
-
     def createObject(self, obj, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
         """
         This inherits the WorldCreatorBase's createObject and uses
