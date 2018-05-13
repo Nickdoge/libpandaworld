@@ -13,8 +13,8 @@ class WorldCreator(WorldCreatorBase):
 
     def __init__(self, cr, worldFile, hubManager, district):
         self.objectList = {}
-        WorldCreatorBase.__init__(self, cr, worldFile, hubManager, district)
         self.hubAreas = {}
+        WorldCreatorBase.__init__(self, cr, worldFile, hubManager, district)
 
     def destroy(self):
         self.district = None
@@ -120,13 +120,12 @@ class WorldCreator(WorldCreatorBase):
 
         objType = WorldCreatorBase.createObject(self, obj, parent, parentUid, objKey, dynamic, zoneLevel, startTime, parentIsObj, fileName, actualParentObj)
         if not objType:
-            return
+            return (None, None)
 
         newObj = None
         newActualParent = None
 
-        if actualParentObj:
-            actualParentObj.createObject(obj, objKey, objType)
+        self.hubManager.handleObject(obj, objKey, objType) # Should there be something more here?
 
         return (newObj, newActualParent)
 

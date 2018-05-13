@@ -1,6 +1,7 @@
 from pandac.PandaModules import *
 from direct.showbase.DirectObject import DirectObject
 from libpandaworld.WorldGlobals import WORLD_TYPE
+from importlib import import_module
 import os, re, imp, types
 
 class WorldCreatorBase(DirectObject):
@@ -102,7 +103,7 @@ class WorldCreatorBase(DirectObject):
         if newObjInfo:
             newObj, newActualParent = newObjInfo
         else:
-            return None
+            return
         instanced = obj.get('Instanced')
         objDict = obj.get('Objects')
         if objDict:
@@ -189,10 +190,9 @@ class WorldCreatorBase(DirectObject):
             if not uid in fileData['ObjectIds']:
                 continue
 
-            try:
-                objectInfo = fileData['ObjectIds'][uid]
-            except Exception:
-                continue
+            # TODO: Secure this:
+            getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
+            exec getSyntax
 
             if not 'File' in objectInfo or objectInfo.get('File') == '':
                 break
@@ -211,10 +211,9 @@ class WorldCreatorBase(DirectObject):
                 fileName += '.py'
             if self.isObjectDefined(uid, fileName):
                 fileData = self.fileDicts[fileName]
-                try:
-                    objectInfo = fileData['ObjectIds'][uid]
-                except Exception:
-                    return
+                # TODO: Secure this:
+                getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
+                exec getSyntax
         return objectInfo
 
     def getFilelistByUid(self, uid, fileDict = None):
