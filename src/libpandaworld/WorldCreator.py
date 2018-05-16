@@ -14,6 +14,8 @@ class WorldCreator(WorldCreatorBase):
     def __init__(self, cr, worldFile, hubManager, district):
         self.objectList = {}
         self.hubAreas = {}
+        self.postLoadCalls = []
+
         WorldCreatorBase.__init__(self, cr, worldFile, hubManager, district)
 
     def destroy(self):
@@ -170,3 +172,25 @@ class WorldCreator(WorldCreatorBase):
         else:
             startTime = globalClock.getRealTime()
             self.loadObjectDict(objDict, parentObj, parentUid, dynamic, zoneLevel=zoneLevel, startTime=startTime)
+
+    def registerPostLoadCall(self, funcCall):
+        """
+        This registers a function to call after something
+        in the world is loaded.
+        """
+
+        self.postLoadCalls.append(funcCall)
+
+    def processPostLoadCalls(self):
+        """
+        This calls functions in the list after something in the world
+        is loaded.
+        """
+
+        functionsCalled = []
+        for currObj in self.postLoadCalls:
+            if currObj not in functionsCalled:
+                functionsCalled.append(currObj)
+                currObj()
+
+        self.postLoadCalls = []
