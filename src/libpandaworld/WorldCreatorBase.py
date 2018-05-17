@@ -231,7 +231,9 @@ class WorldCreatorBase(DirectObject):
             fileData = fileDict[name]
             if not uid in fileData['ObjectIds']:
                 continue
-            objectInfo = fileData['ObjectIds'][uid]
+            # TODO: Replace this:
+            getSyntax = 'objectInfo = fileData' + fileData['ObjectIds'][uid]
+            exec getSyntax
             fileList.add(name)
             objects = objectInfo.get('Objects')
             if objects:
