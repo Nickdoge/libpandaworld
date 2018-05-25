@@ -27,6 +27,6 @@ class WorldCreatorAI(WorldCreatorBase):
             loc = self.hubManager.generateLocation(objKey)
             newActualParent = loc
         elif actualParentObj:
-            actualParentObj.createObject(obj, objKey, objType)
+            actualParentObj.createObject(obj, objType, parent, parentUid, objKey, dynamic, zoneLevel, startTime, parentIsObj, fileName, actualParentObj)
 
         return (newObj, newActualParent)

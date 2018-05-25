@@ -129,7 +129,7 @@ class WorldCreator(WorldCreatorBase):
 
         # Should there be something more here?
 
-        self.hubManager.handleObject(obj, objType, parent, parentUid, objKey, dynamic, zoneLevel, startTime, parentIsObj, fileName, actualParentObj)
+        self.hubManager.createObject(obj, objType, parent, parentUid, objKey, dynamic, zoneLevel, startTime, parentIsObj, fileName, actualParentObj)
 
         return (newObj, newActualParent)
 
