@@ -12,11 +12,13 @@ class WorldCreator(WorldCreatorBase):
     notify = directNotify.newCategory('WorldCreator')
 
     def __init__(self, cr, worldFile, hubManager, district):
+        self.district = district
+
         self.objectList = {}
         self.hubAreas = {}
         self.postLoadCalls = []
 
-        WorldCreatorBase.__init__(self, cr, worldFile, hubManager, district)
+        WorldCreatorBase.__init__(self, cr, worldFile, hubManager)
 
     def destroy(self):
         self.district = None

@@ -10,16 +10,13 @@ class WorldCreatorBase(DirectObject):
     a server or client sided world creator.
     """
 
-    def __init__(self, repository, worldFile, hubManager, district):
+    def __init__(self, repository, worldFile, hubManager):
         self.fileDicts = {}
         self.creatingInstance = False
         self.creatingInstanceParams = None
         self.repository = repository
         self.worldFile = worldFile
         self.hubManager = hubManager
-        self.district = district
-
-        self.makeRegion()
 
     def makeRegion(self):
         """
