@@ -11,12 +11,15 @@ class WorldCreatorBase(DirectObject):
     """
 
     def __init__(self, repository, worldFile, hubManager):
-        self.fileDicts = {}
-        self.creatingInstance = False
-        self.creatingInstanceParams = None
         self.repository = repository
         self.worldFile = worldFile
         self.hubManager = hubManager
+
+        self.creatingInstance = False
+        self.creatingInstanceParams = None
+        self.fileDicts = {}
+        self.objectList = {}
+        self.postLoadCalls = []
 
     def makeRegion(self):
         """
@@ -117,6 +120,26 @@ class WorldCreatorBase(DirectObject):
                 fileName=fileName,
                 actualParentObj=newActualParent)
         return newObj
+
+    def appendObjectList(self, key, value):
+        """
+        Append a key/value to the object list.
+        """
+
+        self.objectList[key] = value
+
+    def findObjectCategory(self, objectType):
+        """
+        Find an object category in the object list.
+        """
+
+        cats = self.objectList.keys()
+        for currCat in cats:
+            types = self.objectList[currCat].keys()
+            if objectType in types:
+                return currCat
+
+        return
 
     def createObject(self, obj, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
         """
@@ -306,3 +329,37 @@ class WorldCreatorBase(DirectObject):
             return True
         else:
             return False
+
+    def loadObjectDictDelayed(self, parentObj, objDict, parentUid, dynamic, zoneLevel=0):
+        """
+        This will call loadObjectDict with delayed time.
+        (up to applications to use startTime)
+        """
+
+        if hasattr(parentObj, 'loadZoneObjects'):
+            parentObj.loadZoneObjects(zoneLevel)
+        else:
+            startTime = globalClock.getRealTime()
+            self.loadObjectDict(objDict, parentObj, parentUid, dynamic, zoneLevel=zoneLevel, startTime=startTime)
+
+    def registerPostLoadCall(self, funcCall):
+        """
+        This registers a function to call after something
+        in the world is loaded.
+        """
+
+        self.postLoadCalls.append(funcCall)
+
+    def processPostLoadCalls(self):
+        """
+        This calls functions in the list after something in the world
+        is loaded.
+        """
+
+        functionsCalled = []
+        for currObj in self.postLoadCalls:
+            if currObj not in functionsCalled:
+                functionsCalled.append(currObj)
+                currObj()
+
+        self.postLoadCalls = []

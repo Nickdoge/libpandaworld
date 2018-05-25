@@ -14,10 +14,6 @@ class WorldCreator(WorldCreatorBase):
     def __init__(self, cr, worldFile, hubManager, district):
         self.district = district
 
-        self.objectList = {}
-        self.hubAreas = {}
-        self.postLoadCalls = []
-
         WorldCreatorBase.__init__(self, cr, worldFile, hubManager)
 
     def destroy(self):
@@ -96,26 +92,6 @@ class WorldCreator(WorldCreatorBase):
 
         return
 
-    def appendObjectList(self, key, value):
-        """
-        Append a key/value to the object list.
-        """
-
-        self.objectList[key] = value
-
-    def findObjectCategory(self, objectType):
-        """
-        Find an object category in the object list.
-        """
-
-        cats = self.objectList.keys()
-        for currCat in cats:
-            types = self.objectList[currCat].keys()
-            if objectType in types:
-                return currCat
-
-        return
-
     def createObject(self, obj, parent, parentUid, objKey, dynamic, zoneLevel=0, startTime=None, parentIsObj=False, fileName=None, actualParentObj=None):
         """
         This inherits the WorldCreatorBase's createObject and uses
@@ -162,37 +138,3 @@ class WorldCreator(WorldCreatorBase):
                 newParentUid = objKey
                 self.loadObjectDict(objDict, parentObj, newParentUid, dynamic, zoneLevel=zoneLevel, startTime=startTime, actualParentObj=newObj)
         return newObj
-
-    def loadObjectDictDelayed(self, parentObj, objDict, parentUid, dynamic, zoneLevel=0):
-        """
-        This will call loadObjectDict with delayed time.
-        (up to applications to use startTime)
-        """
-
-        if hasattr(parentObj, 'loadZoneObjects'):
-            parentObj.loadZoneObjects(zoneLevel)
-        else:
-            startTime = globalClock.getRealTime()
-            self.loadObjectDict(objDict, parentObj, parentUid, dynamic, zoneLevel=zoneLevel, startTime=startTime)
-
-    def registerPostLoadCall(self, funcCall):
-        """
-        This registers a function to call after something
-        in the world is loaded.
-        """
-
-        self.postLoadCalls.append(funcCall)
-
-    def processPostLoadCalls(self):
-        """
-        This calls functions in the list after something in the world
-        is loaded.
-        """
-
-        functionsCalled = []
-        for currObj in self.postLoadCalls:
-            if currObj not in functionsCalled:
-                functionsCalled.append(currObj)
-                currObj()
-
-        self.postLoadCalls = []
