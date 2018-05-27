@@ -14,6 +14,8 @@ class WorldCreator(WorldCreatorBase):
     def __init__(self, cr, worldFile, hubManager, district):
         self.district = district
 
+        self.hubAreas = {}
+
         WorldCreatorBase.__init__(self, cr, worldFile, hubManager)
 
     def destroy(self):
