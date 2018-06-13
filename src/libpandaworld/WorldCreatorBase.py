@@ -32,6 +32,20 @@ class WorldCreatorBase(DirectObject):
             self.loadObjectsFromFile(self.worldFile, self.repository)
         self.worldType = None
 
+    def setHubManager(self, hubManager):
+        """
+        Set the hub manager.
+        """
+
+        self.hubManager = hubManager
+
+    def getHubManager(self):
+        """
+        Get the hub manager.
+        """
+
+        return self.hubManager
+
     def loadObjectsFromFile(self, filename, parent, zoneLevel=0, startTime=None, parentIsObj=False):
         """
         This method opens a world data module and loads all of the
